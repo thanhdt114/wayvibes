@@ -175,7 +175,7 @@ std::string getInputDevicePath(std::string &configDir) {
   return "";
 }
 
-void promptAndSaveInputDevice(std::string &configDir) {
+void saveInputDevice(std::string &configDir) {
   std::cout << "Please select a keyboard input device." << std::endl;
   std::string selectedDevice = findKeyboardDevices();
   if (!selectedDevice.empty()) {
@@ -245,7 +245,7 @@ int main(int argc, char *argv[]) {
   // Argument handling
   for (int i = 1; i < argc; i++) {
     if (std::string(argv[i]) == "--prompt") {
-      promptAndSaveInputDevice(configDir);
+      saveInputDevice(configDir);
       return 0;
     } else if (std::string(argv[i]) == "-v" && (i + 1) < argc) {
       try {
@@ -277,7 +277,7 @@ int main(int argc, char *argv[]) {
 
   if (devicePath.empty()) {
     std::cout << "No device found. Prompting user." << std::endl;
-    promptAndSaveInputDevice(configDir);
+    saveInputDevice(configDir);
     devicePath = getInputDevicePath(configDir);
   }
 

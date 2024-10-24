@@ -81,6 +81,9 @@ Wayvibes is compatible with the Mechvibes soundpack format. So, You can find sou
 - [Mechvibes Soundpacks](https://docs.google.com/spreadsheets/d/1PimUN_Qn3CWqfn-93YdVW8OWy8nzpz3w3me41S8S494)
 - [Discord Community](https://discord.com/invite/MMVrhWxa4w) (got akko_lavender_purples soundpack from here)
 
+### Note:
+Some soundpacks with single audio file configuration won't work, use [this tool](https://github.com/KunalBagaria/packfixer-rustyvibes) to convert them into a compatible format
+
 ## Why Wayvibes?
 
 Unlike [mechvibes](https://mechvibes.com) and [rustyvibes](https://github.com/KunalBagaria/rustyvibes), which encounter [issues](https://github.com/KunalBagaria/rustyvibes/issues/23) on Wayland, Wayvibes aims to provide a seamless integration with wayland.
