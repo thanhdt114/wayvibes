@@ -24,8 +24,8 @@ ma_engine engine;
 void playSound(const char *soundFile, float volume) {
   ma_sound *sound = new ma_sound;
 
-  if (ma_sound_init_from_file(&engine, soundFile, MA_SOUND_FLAG_ASYNC, NULL,
-                              NULL, sound) != MA_SUCCESS) {
+  if (ma_sound_init_from_file(&engine, soundFile, MA_SOUND_FLAG_ASYNC, NULL, NULL,
+                              sound) != MA_SUCCESS) {
     std::cerr << "Failed to initialize sound: " << soundFile << std::endl;
     delete sound;
     return;
@@ -41,15 +41,13 @@ void playSound(const char *soundFile, float volume) {
 }
 
 // Function to load the key-sound mappings from config.json
-std::unordered_map<int, std::string>
-loadKeySoundMappings(const std::string &configPath) {
+std::unordered_map<int, std::string> loadKeySoundMappings(const std::string &configPath) {
   std::unordered_map<int, std::string> keySoundMap;
 
   std::ifstream configFile(configPath);
   if (!configFile.is_open()) {
-    std::cerr
-        << "Could not open config.json file! Is the soundpack path correct?"
-        << std::endl;
+    std::cerr << "Could not open config.json file! Is the soundpack path correct?"
+              << std::endl;
     return keySoundMap;
   }
 
@@ -113,8 +111,7 @@ std::string findKeyboardDevices() {
 
     int rc = libevdev_new_from_fd(fd, &dev);
     if (rc < 0) {
-      std::cerr << "Failed to create evdev device for " << devicePath
-                << std::endl;
+      std::cerr << "Failed to create evdev device for " << devicePath << std::endl;
       close(fd);
       continue;
     }
@@ -145,8 +142,7 @@ std::string findKeyboardDevices() {
 
   // Prompt for selection if there are multiple devices
   while (!validChoice) {
-    std::cout << "Select a keyboard input device (1-" << filteredDevices.size()
-              << "): ";
+    std::cout << "Select a keyboard input device (1-" << filteredDevices.size() << "): ";
     int choice;
     std::cin >> choice;
 
@@ -155,6 +151,7 @@ std::string findKeyboardDevices() {
       validChoice = true;
     } else {
       std::cerr << "Invalid choice. Please try again." << std::endl;
+      exit(1);
     }
   }
 
@@ -182,8 +179,7 @@ void saveInputDevice(std::string &configDir) {
     std::ofstream outputFile(configDir + "/input_device_path");
     outputFile << "/dev/input/" << selectedDevice;
     outputFile.close();
-    std::cout << "Device path saved: /dev/input/" << selectedDevice
-              << std::endl;
+    std::cout << "Device path saved: /dev/input/" << selectedDevice << std::endl;
   } else {
     std::cerr << "No device selected. Exiting." << std::endl;
     exit(1);
@@ -191,8 +187,8 @@ void saveInputDevice(std::string &configDir) {
 }
 
 void runMainLoop(const std::string &devicePath,
-                 const std::unordered_map<int, std::string> &keySoundMap,
-                 float volume, const std::string &soundpackPath) {
+                 const std::unordered_map<int, std::string> &keySoundMap, float volume,
+                 const std::string &soundpackPath) {
   int fd = open(devicePath.c_str(), O_RDONLY);
   if (fd < 0) {
     std::cerr << "Error: Cannot open device " << devicePath << std::endl;
@@ -234,8 +230,7 @@ int main(int argc, char *argv[]) {
   float volume = 1.0f;
   std::string configDir;
   const char *xdgConfigHome = std::getenv("XDG_CONFIG_HOME");
-  configDir = (xdgConfigHome ? xdgConfigHome
-                             : std::string(getenv("HOME")) + "/.config") +
+  configDir = (xdgConfigHome ? xdgConfigHome : std::string(getenv("HOME")) + "/.config") +
               "/wayvibes";
 
   if (!std::filesystem::exists(configDir)) {
@@ -252,8 +247,7 @@ int main(int argc, char *argv[]) {
         volume = std::stof(argv[i + 1]);
         i++;
       } catch (...) {
-        std::cerr << "Invalid volume argument. Using default volume."
-                  << std::endl;
+        std::cerr << "Invalid volume argument. Using default volume." << std::endl;
       }
     } else if (argv[i][0] != '-') {
       soundpackPath = argv[i];
@@ -270,8 +264,7 @@ int main(int argc, char *argv[]) {
   // Load key-sound mappings from config.json
   std::cout << "Soundpack: " << soundpackPath << std::endl;
   std::string configFilePath = soundpackPath + "/config.json";
-  std::unordered_map<int, std::string> keySoundMap =
-      loadKeySoundMappings(configFilePath);
+  std::unordered_map<int, std::string> keySoundMap = loadKeySoundMappings(configFilePath);
 
   std::string devicePath = getInputDevicePath(configDir);
 
