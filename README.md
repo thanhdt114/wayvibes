@@ -20,6 +20,12 @@ make
 sudo make install
 ```
 
+## Uninstalling
+```bash
+sudo rm /usr/local/bin/wayvibes
+rm -rf ~/wayvibes
+```
+
 ## Usage
 
 ### Initial Setup
