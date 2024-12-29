@@ -26,7 +26,14 @@ void playSound(const char *soundFile, float volume) {
 
   if (ma_sound_init_from_file(&engine, soundFile, MA_SOUND_FLAG_ASYNC, NULL, NULL,
                               sound) != MA_SUCCESS) {
-    std::cerr << "Failed to initialize sound: " << soundFile << std::endl;
+    if (strcmp(strrchr(soundFile, '.'), ".ogg") == 0) {
+      std::cerr << "ogg files are not supported, convert them to wav/mp3 (See README of "
+                   "the project)"
+                << std::endl;
+    } else {
+      std::cerr << "Failed to initialize sound: " << soundFile << std::endl;
+    }
+    // if extension is .ogg, print the message:
     delete sound;
     return;
   }

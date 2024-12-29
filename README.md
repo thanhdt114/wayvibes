@@ -90,6 +90,17 @@ Wayvibes is compatible with the Mechvibes soundpack format. So, You can find sou
 ### Note:
 Some soundpacks with single audio file configuration won't work, use [this tool](https://github.com/KunalBagaria/packfixer-rustyvibes) to convert them into a compatible format
 
+### Ogg files incompatiblity
+Wayvibes uses miniaudio to play sounds, which doesn't support all ogg files by default. So, you need to convert ogg files to wav/mp3 files using `ffmpeg` or `sox`, and change the extensions in the `config.json` file. Use this command for this:
+
+Converting ogg files to wav using `ffmpeg` and change extensions in `config.json`:
+
+```bash
+cd <soundpack_path>
+for f in *.ogg; do ffmpeg -i "$f" "${f%.ogg}.wav"; done && sed -i 's/\.ogg/\.wav/g' config.json
+rm *.ogg # remove ogg files
+```
+
 ## Why Wayvibes?
 
 Unlike [mechvibes](https://mechvibes.com) and [rustyvibes](https://github.com/KunalBagaria/rustyvibes), which encounter [issues](https://github.com/KunalBagaria/rustyvibes/issues/23) on Wayland, Wayvibes aims to provide a seamless integration with wayland.
