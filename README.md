@@ -22,8 +22,7 @@ sudo make install
 
 ## Uninstalling
 ```bash
-sudo rm /usr/local/bin/wayvibes
-rm -rf ~/wayvibes
+sudo make uninstall
 ```
 
 ## Usage
@@ -35,7 +34,7 @@ rm -rf ~/wayvibes
 sudo usermod -a -G input <your_username>
 ```
 
-2. **Reboot** or **Logut and Login** for the changes to take effect.
+2. **Reboot** or **Logout and Login** for the changes to take effect.
 
 3. Run the application:
 
