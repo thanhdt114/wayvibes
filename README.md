@@ -3,7 +3,15 @@
 Wayvibes is a Wayland-native CLI made in C++ that plays mechanical keyboard sounds (or custom sounds) globally on keypresses. It utilizes `libevdev` to capture keypress events and [miniaudio](https://miniaud.io) to play sounds.
 
 ## Installing
+### From AUR
+Install [wayvibes-git](https://aur.archlinux.org/packages/wayvibes-git) from AUR (maintained by  [@justanoobcoder](https://www.github.com/justanoobcoder)).
 
+```bash
+#using yay
+yay -S wayvibes-git
+```
+
+### From Source
 #### Prerequisites:
 Ensure the following dependencies are installed:
 
