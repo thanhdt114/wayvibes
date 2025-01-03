@@ -7,12 +7,10 @@ $(TARGET): $(SRC) miniaudio.h
 	g++ -o $(TARGET) $(SRC) -levdev --verbose
 
 install: $(TARGET)
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp $(TARGET) $(DESTDIR)$(PREFIX)/bin
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/$(TARGET)
+	install -Dm755 $(TARGET) -t /usr/local/bin
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(TARGET)
+	rm -f /usr/local/bin/$(TARGET)
 
 clean:
 	rm -f $(TARGET)
