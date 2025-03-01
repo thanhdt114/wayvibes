@@ -20,33 +20,6 @@ using json = nlohmann::json;
 // Global engine instance
 ma_engine engine;
 
-// Function to play sound asynchronously
-void playSound(const char *soundFile, float volume) {
-  ma_sound *sound = new ma_sound;
-
-  if (ma_sound_init_from_file(&engine, soundFile, MA_SOUND_FLAG_ASYNC, NULL, NULL,
-                              sound) != MA_SUCCESS) {
-    if (strcmp(strrchr(soundFile, '.'), ".ogg") == 0) {
-      std::cerr << "ogg files are not supported, convert them to wav/mp3 (See README of "
-                   "the project)"
-                << std::endl;
-    } else {
-      std::cerr << "Failed to initialize sound: " << soundFile << std::endl;
-    }
-    // if extension is .ogg, print the message:
-    delete sound;
-    return;
-  }
-
-  ma_sound_set_volume(sound, volume);
-
-  if (ma_sound_start(sound) != MA_SUCCESS) {
-    std::cerr << "Failed to play sound: " << soundFile << std::endl;
-    ma_sound_uninit(sound);
-    delete sound;
-  }
-}
-
 // Function to load the key-sound mappings from config.json
 std::unordered_map<int, std::string> loadKeySoundMappings(const std::string &configPath) {
   std::unordered_map<int, std::string> keySoundMap;
@@ -211,6 +184,7 @@ void runMainLoop(const std::string &devicePath,
     return;
   }
   std::cout << "Device Name: " << libevdev_get_name(dev) << std::endl;
+  ma_engine_set_volume(&engine, volume);
 
   while (true) {
     struct input_event ev;
@@ -219,7 +193,7 @@ void runMainLoop(const std::string &devicePath,
       if (ev.type == EV_KEY && ev.value == 1) {
         if (keySoundMap.find(ev.code) != keySoundMap.end()) {
           std::string soundFile = soundpackPath + "/" + keySoundMap.at(ev.code);
-          playSound(soundFile.c_str(), volume);
+          ma_engine_play_sound(&engine, soundFile.c_str(), NULL);
         } else {
           std::cerr << "No sound mapped for keycode: " << ev.code << std::endl;
         }
