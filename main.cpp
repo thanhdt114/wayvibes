@@ -28,6 +28,7 @@ std::unordered_map<int, std::string> loadKeySoundMappings(const std::string &con
   if (!configFile.is_open()) {
     std::cerr << "Could not open config.json file! Is the soundpack path correct?"
               << std::endl;
+    exit(1);
     return keySoundMap;
   }
 
