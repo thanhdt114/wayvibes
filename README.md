@@ -15,9 +15,16 @@ yay -S wayvibes-git
 #### Prerequisites:
 Ensure the following dependencies are installed:
 
-- `libevdev` (`libevdev-devel` on debian/fedora)
-- `nlohmann-json` (`nlohmann-json-devel` on debian/fedora)
-- ~`miniaudio`~ (`miniaudio.h` file is present in this project)
+Ubuntu-based distros:
+- `libevdev-dev`
+- `nlohmann-json*-dev`
+
+You can install them easily by running
+`sudo apt install libevdev-dev nlohmann-json*-dev`
+
+Arch:
+- `libevdev`
+- `nlohmann-json`
 
 To install wayvibes, use the following commands: 
 
