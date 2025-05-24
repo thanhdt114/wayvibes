@@ -54,13 +54,13 @@ sudo usermod -a -G input <your_username>
 3. Run the application:
 
 ```bash
-wayvibes <soundpack_path> -v <volume(0.0-10.0)>
+wayvibes <soundpack_path> -v <volume(0.0-10.0)> -s
 ```
 
 **Example:** 
 
 ```bash
-wayvibes ~/wayvibes/akko_lavender_purples/ -v 3
+wayvibes ~/wayvibes/akko_lavender_purples/ -v 3 -s
 ```
 
 #### Note:
