@@ -15,16 +15,19 @@ yay -S wayvibes-git
 #### Prerequisites:
 Ensure the following dependencies are installed:
 
-Ubuntu-based distros:
+**Ubuntu/debian-based distros:**
 - `libevdev-dev`
 - `nlohmann-json*-dev`
 
-You can install them easily by running
+Install them with:
 `sudo apt install libevdev-dev nlohmann-json*-dev`
 
-Arch:
+**Arch-based distros:**
 - `libevdev`
 - `nlohmann-json`
+
+Install them with:
+`sudo pacman -S libevdev nlohmann-json`
 
 To install wayvibes, use the following commands: 
 
@@ -54,13 +57,17 @@ sudo usermod -a -G input <your_username>
 3. Run the application:
 
 ```bash
-wayvibes <soundpack_path> -v <volume(0.0-10.0)> -s
+wayvibes <soundpack_path> -v <volume(0.0-10.0)>
 ```
+> [!NOTE]
+> - Use `--background` or `-bg` flag to run the application in the background/detached mode.
+> - Useful for adding the command to a startup file like `.profile`
 
 **Example:** 
 
 ```bash
-wayvibes ~/wayvibes/akko_lavender_purples/ -v 3 -s
+wayvibes ~/wayvibes/akko_lavender_purples/ -v 3
+wayvibes ~/my_soundpacks/cherry_mx/ -v 5 --background
 ```
 
 #### Note:
