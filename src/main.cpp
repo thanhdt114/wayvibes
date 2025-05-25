@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
             } catch (...) {
                 std::cerr << "Invalid volume argument. Using default volume." << std::endl;
             }
-        } else if (std::string(argv[i]) == "--silent" || std::string(argv[i]) == "-s") {
+        } else if (std::string(argv[i]) == "--background" || std::string(argv[i]) == "-bg") {
             silent = true;
         } else if (argv[i][0] != '-') {
             soundpackPath = argv[i];
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     if (silent) {
         pid_t pid = fork();
         if (pid < 0) {
-            std::cerr << "Failed to fork for silent/background mode." << std::endl;
+            std::cerr << "Failed to fork for background mode." << std::endl;
             return 1;
         }
         if (pid > 0) {

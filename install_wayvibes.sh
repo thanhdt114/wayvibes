@@ -36,7 +36,7 @@ fi
 
 read -p "Do you want to add auto-start to ~/.profile? (y/n): " PROFILE_CHOICE
 if [[ "$PROFILE_CHOICE" =~ ^[Yy]$ ]]; then
-    CMD="wayvibes \"$SOUNDPACK_PATH\" -v 3 -s"
+    CMD="wayvibes \"$SOUNDPACK_PATH\" -v 3 -bg"
     if ! grep -Fxq "$CMD" ~/.profile; then
         echo "$CMD" >> ~/.profile
         echo "Added to ~/.profile:"
