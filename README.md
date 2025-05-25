@@ -15,9 +15,19 @@ yay -S wayvibes-git
 #### Prerequisites:
 Ensure the following dependencies are installed:
 
-- `libevdev` (`libevdev-devel` on debian/fedora)
-- `nlohmann-json` (`nlohmann-json-devel` on debian/fedora)
-- ~`miniaudio`~ (`miniaudio.h` file is present in this project)
+**Ubuntu/debian-based distros:**
+- `libevdev-dev`
+- `nlohmann-json*-dev`
+
+Install them with:
+`sudo apt install libevdev-dev nlohmann-json*-dev`
+
+**Arch-based distros:**
+- `libevdev`
+- `nlohmann-json`
+
+Install them with:
+`sudo pacman -S libevdev nlohmann-json`
 
 To install wayvibes, use the following commands: 
 
@@ -49,11 +59,15 @@ sudo usermod -a -G input <your_username>
 ```bash
 wayvibes <soundpack_path> -v <volume(0.0-10.0)>
 ```
+> [!NOTE]
+> - Use `--background` or `-bg` flag to run the application in the background/detached mode.
+> - Useful for adding the command to a startup file like `.profile`
 
 **Example:** 
 
 ```bash
 wayvibes ~/wayvibes/akko_lavender_purples/ -v 3
+wayvibes ~/my_soundpacks/cherry_mx/ -v 5 --background
 ```
 
 #### Note:
