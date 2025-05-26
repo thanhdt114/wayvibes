@@ -55,13 +55,22 @@ sudo usermod -a -G input <your_username>
 2. **Reboot** or **Logout and Login** for the changes to take effect.
 
 3. Run the application:
+```
 
-```bash
+Usage: wayvibes [options] [soundpack_path]
+Options:
+  --device          Select input device
+  -v <volume>       Set volume (0.0-10.0) (default: 1.0)
+  --background, -bg Run in background (detached from terminal)
+  --help, -h       Show this help message;
+
+Note: default soundpack path is `./`(current directory)
+
 wayvibes <soundpack_path> -v <volume(0.0-10.0)>
 ```
+
 > [!NOTE]
-> - Use `--background` or `-bg` flag to run the application in the background/detached mode.
-> - Useful for adding the command to a startup file like `.profile`
+> - Use `--background`/`-bg` if adding the command to a startup file like `.profile`
 
 **Example:** 
 
@@ -84,10 +93,10 @@ Typically, the input device will be something like `AT Translated Set 2 keyboard
 To reset and prompt for input device selection again, use:
 
 ```bash 
-wayvibes --prompt
+wayvibes --device
 ```
 
-**Note that input device will change after reboot if you plug in/out any other device, so use --prompt when this happens**
+**Note that input device will change after reboot if you plug in/out any other device, so use --device when this happens**
 
 
 ### **Important**:
