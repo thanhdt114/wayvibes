@@ -41,7 +41,8 @@ int main(int argc, char *argv[]) {
                 << "  -v <volume>       Set volume (0.0-10.0) (default: 1.0)\n"
                 << "  --background, -bg Run in background (detached from terminal)\n"
                 << "  --help, -h       Show this help message\n"
-                << "Note: default soundpack path is './' (current directory) ";
+                << "Note: default soundpack path is './' (current directory) "
+                << "Example: wayvibes ~/wayvibes/akko_lavender_purples/ -v 3";
       return 0;
     } else if (argv[i][0] != '-') {
       soundpackPath = argv[i];
