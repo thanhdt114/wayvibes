@@ -45,6 +45,7 @@ sudo make install
 
 ## Uninstalling
 ```bash
+cd ~/wayvibes
 sudo make uninstall
 ```
 
