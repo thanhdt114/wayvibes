@@ -5,7 +5,7 @@ Wayvibes is a Wayland-native CLI made in C++ that plays mechanical keyboard soun
 ## Installing
 ### One liner install
 ```bash
-curl -fsSl https://raw.githubusercontent.com/sahaj-b/wayvibes/main/install_wayvibes.sh | bash
+curl -fsSl https://raw.githubusercontent.com/sahaj-b/wayvibes/main/install.sh | bash
 ```
 
 ### From AUR
