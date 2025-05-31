@@ -76,7 +76,7 @@ wayvibes <soundpack_path> -v <volume(0.0-10.0)>
 ```
 
 > [!NOTE]
-> - Use `--background`/`-bg` if adding the command to a startup file like `.profile`
+> Use `--background`/`-bg` if adding the command to a startup file like `.profile`
 
 **Example:** 
 
@@ -102,10 +102,12 @@ To reset and prompt for input device selection again, use:
 wayvibes --device
 ```
 
-**Note that input device will change after reboot if you plug in/out any other device, so use --device when this happens**
+> [!NOTE]
+> - **Device Path Persistence**: The program automatically uses stable `/dev/input/by-id/` paths when available.
+> - If the selected device doesn't have a by-id symlink, it will fallback to non-persistent paths, which **can change** when you reboot after plugging/unplugging devices
+> - Use `--device` to select the device again in such cases.
 
-
-### **Important**:
+> [!WARNING]
 **Do not run the program with sudo/root privileges as it will monopolize the audio device until reboot.**
 
 ## Get Soundpacks
