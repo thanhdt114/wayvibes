@@ -8,6 +8,17 @@
 #include <unistd.h>
 #include <unordered_map>
 
+void printHelp() {
+  std::cout << "Usage: wayvibes [options] [soundpack_path]\n"
+            << "Options:\n"
+            << "  --device          Select input device\n"
+            << "  -v <volume>       Set volume (0.0-10.0) (default: 1.0)\n"
+            << "  --background, -bg Run in background (detached from terminal)\n"
+            << "  --help, -h       Show this help message\n"
+            << "Note: default soundpack path is './' (current directory) "
+            << "Example: wayvibes ~/wayvibes/akko_lavender_purples/ -v 3";
+}
+
 int main(int argc, char *argv[]) {
   std::string soundpackPath = "./";
   float volume = 1.0f;
@@ -35,17 +46,14 @@ int main(int argc, char *argv[]) {
     } else if (std::string(argv[i]) == "--background" || std::string(argv[i]) == "-bg") {
       silent = true;
     } else if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "-h") {
-      std::cout << "Usage: wayvibes [options] [soundpack_path]\n"
-                << "Options:\n"
-                << "  --device          Select input device\n"
-                << "  -v <volume>       Set volume (0.0-10.0) (default: 1.0)\n"
-                << "  --background, -bg Run in background (detached from terminal)\n"
-                << "  --help, -h       Show this help message\n"
-                << "Note: default soundpack path is './' (current directory) "
-                << "Example: wayvibes ~/wayvibes/akko_lavender_purples/ -v 3";
+      printHelp();
       return 0;
     } else if (argv[i][0] != '-') {
       soundpackPath = argv[i];
+    } else {
+      std::cerr << "Unknown argument: " << argv[i] << std::endl;
+      printHelp();
+      return 1;
     }
   }
 
