@@ -2,6 +2,7 @@
 #include <cstring>
 #include <dirent.h>
 #include <fcntl.h>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <libevdev-1.0/libevdev/libevdev.h>
@@ -9,8 +10,10 @@
 #include <unistd.h>
 #include <vector>
 
+#define deviceDir "/dev/input/"
+
 std::string findKeyboardDevices() {
-  DIR *dir = opendir("/dev/input/");
+  DIR *dir = opendir(deviceDir);
   if (!dir) {
     std::cerr << "Failed to open /dev/input directory" << std::endl;
     return "";
@@ -20,6 +23,7 @@ std::string findKeyboardDevices() {
   struct dirent *entry;
 
   while ((entry = readdir(dir)) != NULL) {
+    // if (!strstr(entry->d_name, "mouse")) {
     if (strncmp(entry->d_name, "event", 5) == 0) {
       devices.push_back(entry->d_name);
     }
@@ -37,7 +41,7 @@ std::string findKeyboardDevices() {
   std::cout << "Available Keyboard devices:" << std::endl;
 
   for (size_t i = 0, displayIndex = 1; i < devices.size(); ++i) {
-    std::string devicePath = "/dev/input/" + devices[i];
+    std::string devicePath = deviceDir + devices[i];
     struct libevdev *dev = nullptr;
     int fd = open(devicePath.c_str(), O_RDONLY);
     if (fd < 0) {
@@ -53,8 +57,8 @@ std::string findKeyboardDevices() {
     }
 
     if (libevdev_has_event_code(dev, EV_KEY, KEY_A)) {
-      std::cout << displayIndex << ". " << libevdev_get_name(dev) << " (event"
-                << devices[i].substr(5) << ")" << std::endl;
+      std::cout << displayIndex << ". " << libevdev_get_name(dev) << " (" << devices[i]
+                << ")" << std::endl;
       filteredDevices.push_back(devices[i]);
       displayIndex++;
     }
@@ -93,6 +97,33 @@ std::string findKeyboardDevices() {
   return selectedDevice;
 }
 
+std::string resolveToByIdPath(const std::string &eventDevice) {
+  namespace fs = std::filesystem;
+  std::string byIdDir = "/dev/input/by-id/";
+
+  try {
+    if (!fs::exists(byIdDir)) {
+      return ""; // No by-id directory, fallback to event path
+    }
+
+    std::string targetPath = fs::canonical(deviceDir + eventDevice);
+
+    for (const auto &entry : fs::directory_iterator(byIdDir)) {
+      if (fs::is_symlink(entry)) {
+        std::string linkTarget = fs::canonical(entry);
+
+        if (linkTarget == targetPath) {
+          return entry.path().string();
+        }
+      }
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Error resolving symlink: " << e.what() << std::endl;
+  }
+
+  return ""; // No matching symlink found
+}
+
 std::string getInputDevicePath(std::string &configDir) {
   std::string inputFilePath = configDir + "/input_device_path";
   std::ifstream inputFile(inputFilePath);
@@ -111,10 +142,21 @@ void saveInputDevice(std::string &configDir) {
   std::cout << "Please select a keyboard input device." << std::endl;
   std::string selectedDevice = findKeyboardDevices();
   if (!selectedDevice.empty()) {
+    std::string byIdPath = resolveToByIdPath(selectedDevice);
+    std::string deviceToSave;
+
+    if (!byIdPath.empty()) {
+      std::cout << "Using by-id path..." << std::endl;
+      deviceToSave = byIdPath;
+    } else {
+      std::cout << "No by-id symlink found, using event path..." << std::endl;
+      deviceToSave = deviceDir + selectedDevice;
+    }
+
     std::ofstream outputFile(configDir + "/input_device_path");
-    outputFile << "/dev/input/" << selectedDevice;
+    outputFile << deviceToSave;
     outputFile.close();
-    std::cout << "Device path saved: /dev/input/" << selectedDevice << std::endl;
+    std::cout << "Device path saved: " << deviceToSave << std::endl;
   } else {
     std::cerr << "No device selected. Exiting." << std::endl;
     exit(1);
