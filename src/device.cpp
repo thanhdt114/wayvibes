@@ -11,11 +11,19 @@
 #include <vector>
 
 #define deviceDir "/dev/input/"
+// ANSI color codes for terminal styling
+#define RESET "\033[0m"
+#define BOLD "\033[1m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
+#define CYAN "\033[36m"
 
 std::string findKeyboardDevices() {
   DIR *dir = opendir(deviceDir);
   if (!dir) {
-    std::cerr << "Failed to open /dev/input directory" << std::endl;
+    std::cerr << RED << "Failed to open /dev/input directory" << RESET << std::endl;
     return "";
   }
 
@@ -32,33 +40,35 @@ std::string findKeyboardDevices() {
   closedir(dir);
 
   if (devices.empty()) {
-    std::cerr << "No input devices found!" << std::endl;
+    std::cerr << RED << "No input devices found!" << RESET << std::endl;
     return "";
   }
 
   std::vector<std::string> filteredDevices;
 
-  std::cout << "Available Keyboard devices:" << std::endl;
+  std::cout << CYAN << "Available Keyboard devices:" << RESET << std::endl;
 
   for (size_t i = 0, displayIndex = 1; i < devices.size(); ++i) {
     std::string devicePath = deviceDir + devices[i];
     struct libevdev *dev = nullptr;
     int fd = open(devicePath.c_str(), O_RDONLY);
     if (fd < 0) {
-      std::cerr << "Error opening " << devicePath << std::endl;
+      std::cerr << RED << "Error opening " << devicePath << RESET << std::endl;
       continue;
     }
 
     int rc = libevdev_new_from_fd(fd, &dev);
     if (rc < 0) {
-      std::cerr << "Failed to create evdev device for " << devicePath << std::endl;
+      std::cerr << RED << "Failed to create evdev device for " << devicePath << RESET
+                << std::endl;
       close(fd);
       continue;
     }
 
     if (libevdev_has_event_code(dev, EV_KEY, KEY_A)) {
-      std::cout << displayIndex << ". " << libevdev_get_name(dev) << " (" << devices[i]
-                << ")" << std::endl;
+      std::cout << CYAN << BOLD << displayIndex << ". " << RESET << YELLOW
+                << libevdev_get_name(dev) << RESET << " (" << devices[i] << ")"
+                << std::endl;
       filteredDevices.push_back(devices[i]);
       displayIndex++;
     }
@@ -68,12 +78,12 @@ std::string findKeyboardDevices() {
   }
 
   if (filteredDevices.empty()) {
-    std::cerr << "No suitable keyboard input devices found!" << std::endl;
+    std::cerr << RED << "No suitable keyboard input devices found!" << RESET << std::endl;
     return "";
   }
 
   if (filteredDevices.size() == 1) {
-    std::cout << "Selecting this keyboard device." << std::endl;
+    std::cout << CYAN << "Selecting this keyboard device." << RESET << std::endl;
     return filteredDevices[0];
   }
 
@@ -81,7 +91,8 @@ std::string findKeyboardDevices() {
   bool validChoice = false;
 
   while (!validChoice) {
-    std::cout << "Select a keyboard input device (1-" << filteredDevices.size() << "): ";
+    std::cout << CYAN << "Select a keyboard input device (1-" << filteredDevices.size()
+              << "): " << RESET;
     int choice;
     std::cin >> choice;
 
@@ -89,8 +100,7 @@ std::string findKeyboardDevices() {
       selectedDevice = filteredDevices[choice - 1];
       validChoice = true;
     } else {
-      std::cerr << "Invalid choice. Please try again." << std::endl;
-      exit(1);
+      std::cerr << RED << "Invalid choice. Please try again." << RESET << std::endl;
     }
   }
 
@@ -118,7 +128,7 @@ std::string resolveToByIdPath(const std::string &eventDevice) {
       }
     }
   } catch (const std::exception &e) {
-    std::cerr << "Error resolving symlink: " << e.what() << std::endl;
+    std::cerr << RED << "Error resolving symlink: " << e.what() << RESET << std::endl;
   }
 
   return ""; // No matching symlink found
@@ -139,26 +149,27 @@ std::string getInputDevicePath(std::string &configDir) {
 }
 
 void saveInputDevice(std::string &configDir) {
-  std::cout << "Please select a keyboard input device." << std::endl;
   std::string selectedDevice = findKeyboardDevices();
   if (!selectedDevice.empty()) {
     std::string byIdPath = resolveToByIdPath(selectedDevice);
     std::string deviceToSave;
 
     if (!byIdPath.empty()) {
-      std::cout << "Using by-id path..." << std::endl;
+      std::cout << GREEN << "\nUsing by-id path..." << RESET << std::endl;
       deviceToSave = byIdPath;
     } else {
-      std::cout << "No by-id symlink found, using event path..." << std::endl;
+      std::cout << YELLOW << BOLD
+                << "\nNo by-id symlink found, using non-persistent event path..." << RESET
+                << std::endl;
       deviceToSave = deviceDir + selectedDevice;
     }
 
     std::ofstream outputFile(configDir + "/input_device_path");
     outputFile << deviceToSave;
     outputFile.close();
-    std::cout << "Device path saved: " << deviceToSave << std::endl;
+    std::cout << GREEN << "Device path saved: " << deviceToSave << RESET << std::endl;
   } else {
-    std::cerr << "No device selected. Exiting." << std::endl;
+    std::cerr << RED << "No device selected. Exiting." << RESET << std::endl;
     exit(1);
   }
 }
