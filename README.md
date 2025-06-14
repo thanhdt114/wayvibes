@@ -52,6 +52,10 @@ sudo make uninstall
 ## Usage
 
 ### Initial Setup
+
+> [!NOTE]
+> This step is already done if you used the one-liner install script.
+
 1. Add user to the `input` group by the following command:
 
 ```bash

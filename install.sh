@@ -50,7 +50,7 @@ install_dependencies() {
     echo -e "${CYAN}  - Fedora: libevdev-devel nlohmann-json-devel${RESET}"
     echo -e "${CYAN}  - RPM: libevdev-devel nlohmann_json-devel${RESET}"
     echo -ne "${CYAN}Ensured? (y/n): ${RESET}"
-    read ENSURED
+    read -r ENSURED
     if ! [[ "$ENSURED" =~ ^[Yy]$ ]]; then
       echo -e "${RED}Exiting due to missing dependencies.${RESET}"
       exit 1
@@ -76,7 +76,7 @@ install_dependencies() {
 clone_and_build() {
   if [ -d "$INSTALL_DIR" ]; then
     echo -ne "\n${CYAN}Wayvibes directory already exists. Do you want to remove it and continue? (y/n): ${RESET}"
-    read REMOVE_CHOICE
+    read -r REMOVE_CHOICE
     if ! [[ "$REMOVE_CHOICE" =~ ^[Yy]$ ]]; then
       echo -e "${YELLOW}Exiting without changes.${RESET}"
       exit 0
@@ -90,8 +90,8 @@ clone_and_build() {
   cd "$INSTALL_DIR"
 
   echo -e "${CYAN}🔨 Building with make...${RESET}"
-  make
-  if [ $? -ne 0 ]; then
+
+  if ! make; then
     echo -e "${RED}❌ Build failed.${RESET}"
     exit 1
   else
@@ -101,7 +101,7 @@ clone_and_build() {
 
 add_to_path() {
   echo -ne "\n${CYAN}Do you want to install wayvibes system-wide? (adds to PATH, RECOMMENDED) (y/n): ${RESET}"
-  read INSTALL_CHOICE
+  read -r INSTALL_CHOICE
   if [[ "$INSTALL_CHOICE" =~ ^[Yy]$ ]]; then
     sudo make install
     echo -e "${GREEN}✅ wayvibes installed to /usr/local/bin/${RESET}"
@@ -113,7 +113,7 @@ add_to_path() {
 
 auto_start_setup() {
   echo -ne "\n${CYAN}Do you want to add wayvibes cmd to '~/.profile' for auto-starting? (y/n): ${RESET}"
-  read PROFILE_CHOICE
+  read -r PROFILE_CHOICE
 
   if [[ "$PROFILE_CHOICE" =~ ^[Yy]$ ]]; then
     # Try to find a soundpack directory (first subdir with config.json)
@@ -127,7 +127,7 @@ auto_start_setup() {
     if [ -z "$SOUNDPACK_PATH" ]; then
       echo -e "${RED}Could not find a soundpack directory (with config.json) in $INSTALL_DIR.${RESET}"
       echo -ne "\n${CYAN}Please enter the full path to your soundpack: ${RESET}"
-      read SOUNDPACK_PATH
+      read -r SOUNDPACK_PATH
       if [ ! -d "$SOUNDPACK_PATH" ] || [ ! -f "$SOUNDPACK_PATH/config.json" ]; then
         echo -e "${RED}❌ Invalid soundpack.${RESET}"
         echo -e "${RED}Wayvibes will not be added for auto-starting${RESET}"
@@ -149,16 +149,33 @@ auto_start_setup() {
   fi
 }
 
+ensure_input_group() {
+  if ! grep -q "^input:" /etc/group; then
+    echo -e "${YELLOW}\nInput group does not exist.${RESET}"
+    echo -e "${YELLOW}Creating 'input' group...${RESET}"
+    sudo groupadd input
+  fi
+
+  if ! id -nG "$USER" | grep -qw "input"; then
+    echo -e "${YELLOW}\n'$USER' is not in 'input' group.${RESET}"
+    sudo usermod -aG input "$USER"
+    echo -e "${GREEN}✅ User added to 'input' group.${RESET}"
+  else
+    echo -e "${GREEN}\n✅ '$USER' is already in 'input' group.${RESET}"
+  fi
+}
+
 echo -e "${YELLOW}--- Wayvibes Auto-Installer ---${RESET}"
 echo -e "${CYAN}Downloading from: $REPO_URL${RESET}\n"
 
 ensure_prerequisites
 install_dependencies
 clone_and_build
+ensure_input_group
 
 if add_to_path; then
   auto_start_setup
 fi
 
-echo -e "${GREEN}\n🎉 Done! Wayvibes is ready to vibe!${RESET}"
+echo -e "${GREEN}\n🎉 Wayvibes is ready to vibe!${RESET}"
 echo -e "${CYAN}Run 'wayvibes --help' for usage instructions${RESET}"
