@@ -16,7 +16,7 @@ void printHelp() {
             << "  --background, -bg Run in background (detached from terminal)\n"
             << "  --help, -h       Show this help message\n"
             << "Note: default soundpack path is './' (current directory) "
-            << "Example: wayvibes ~/wayvibes/akko_lavender_purples/ -v 3";
+            << "Example: wayvibes ~/wayvibes/akko_lavender_purples/ -v 3" << std::endl;
 }
 
 int main(int argc, char *argv[]) {
