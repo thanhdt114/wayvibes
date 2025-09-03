@@ -35,6 +35,7 @@ int main(int argc, char *argv[]) {
   for (int i = 1; i < argc; i++) {
     if (std::string(argv[i]) == "--device") {
       saveInputDevice(configDir);
+      saveMouseDevice(configDir);
       return 0;
     } else if (std::string(argv[i]) == "-v" && (i + 1) < argc) {
       try {
@@ -87,6 +88,7 @@ int main(int argc, char *argv[]) {
       loadKeySoundMappings(soundpackPath + "/config.json");
 
   std::string devicePath = getInputDevicePath(configDir);
+  std::string mouseDevicePath = getMouseDevicePath(configDir);
 
   if (devicePath.empty()) {
     if (!silent) std::cout << "No device found. Prompting user." << std::endl;
@@ -94,7 +96,13 @@ int main(int argc, char *argv[]) {
     devicePath = getInputDevicePath(configDir);
   }
 
-  runMainLoop(devicePath, keySoundMap, volume, soundpackPath);
+  if (mouseDevicePath.empty()) {
+    if (!silent) std::cout << "No mouse device found. Prompting user." << std::endl;
+    saveMouseDevice(configDir);
+    mouseDevicePath = getMouseDevicePath(configDir);
+  }
+
+  runMainLoopMulti(devicePath, mouseDevicePath, keySoundMap, volume, soundpackPath);
 
   ma_engine_uninit(&engine);
   return 0;

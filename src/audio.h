@@ -15,4 +15,10 @@ void runMainLoop(const std::string &devicePath,
                  const std::unordered_map<int, std::string> &keySoundMap, float volume,
                  const std::string &soundpackPath);
 
+// Multi-device loop: keyboard + mouse
+void runMainLoopMulti(const std::string &keyboardDevicePath,
+  const std::string &mouseDevicePath,
+  const std::unordered_map<int, std::string> &keySoundMap,
+  float volume, const std::string &soundpackPath);
+
 #endif // AUDIO_H

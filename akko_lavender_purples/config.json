@@ -72,6 +72,11 @@
     "65": "U.mp3",
     "66": null,
     "67": null,
+    "272": "MOUSE_LEFT.mp3",
+    "273": "MOUSE_RIGHT.mp3",
+    "274": "MOUSE_MIDDLE.mp3",
+    "275": "MOUSE_SIDE.mp3",
+    "276": "MOUSE_EXTRA.mp3",
     "3675": "BACKSPACE.mp3"
   }
 }
